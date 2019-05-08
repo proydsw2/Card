@@ -17,7 +17,6 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping(path = "{/dsw2}")
 public class CardControlador {
     @Autowired
     private CardRepositorio rep;
@@ -28,36 +27,36 @@ public class CardControlador {
     }
 
     @GetMapping(path = {"/Card/{id}", "/Card/{id}/"})
-    public Card retriveOne(@PathVariable Integer id) {
-        Optional<Card> Cardog = rep.findById(id);
-        return Cardog.get();
+    public Card retriveOne(@PathVariable Long id) {
+        Optional<Card> card = rep.findById(id);
+        return card.get();
 
     }
 
     @PostMapping(path = {"/Card/{id}", "/Card/{id}/"})
-    public ResponseEntity<Object> create(@RequestBody Card cardog) {
-        Card entity = rep.save(cardog);
+    public ResponseEntity<Object> create(@RequestBody Card card) {
+        Card entity = rep.save(card);
 
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(entity.getId()).toUri();
+                .buildAndExpand(entity.getNum_card_id()).toUri();
 
         return ResponseEntity.created(location).build();
     }
     @PutMapping(path = {"/Card/{id}", "/Card/{id}/"})
-    public ResponseEntity<Object> update(@PathVariable Integer id, @RequestBody Card cardog) {
+    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody Card card) {
         Optional<Card> entity = rep.findById(id);
 
         if (!entity.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        cardog.setId(id);
-        rep.save(cardog);
+        card.setNum_card_id(id);
+        rep.save(card);
 
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping(path = {"/Card/{id}", "/Card/{id}/"})
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable Long id) {
         rep.deleteById(id);
     }
     }
