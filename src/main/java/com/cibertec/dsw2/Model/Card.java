@@ -1,8 +1,6 @@
-package com.cibertec.dsw2.Modelo;
+package com.cibertec.dsw2.Model;
 
 import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @SequenceGenerator(name="seq_card_id", initialValue=1)
 @Entity
