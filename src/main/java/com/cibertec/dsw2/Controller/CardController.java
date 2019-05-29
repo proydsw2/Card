@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
-
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -18,24 +19,28 @@ import java.util.Optional;
 
 @RestController
 public class CardController {
-    @Autowired
-    private CardRepository rep;
 
-    @GetMapping(path = {"/Card", "/Card/"})
+    @PersistenceContext
+    private EntityManager em;
+
+    @Autowired
+    private CardRepository repository;
+
+    @GetMapping(path = "/card")
     public List<Card> retriveAll() {
-        return rep.findAll();
+        return repository.findAll();
     }
 
-    @GetMapping(path = {"/Card/{id}", "/Card/{id}/"})
+    @GetMapping(path = "/card/{id}")
     public Card retriveOne(@PathVariable Long id) {
-        Optional<Card> card = rep.findById(id);
+        Optional<Card> card = repository.findById(id);
         return card.get();
 
     }
 
-    @PostMapping(path = {"/Card/{id}", "/Card/{id}/"})
+    @PostMapping(path = "/card")
     public ResponseEntity<Object> create(@RequestBody Card card) {
-        Card entity = rep.save(card);
+        Card entity = repository.save(card);
 
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -43,21 +48,22 @@ public class CardController {
 
         return ResponseEntity.created(location).build();
     }
-    @PutMapping(path = {"/Card/{id}", "/Card/{id}/"})
+
+    @PutMapping(path = "/card/{id}")
     public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody Card card) {
-        Optional<Card> entity = rep.findById(id);
+        Optional<Card> entity = repository.findById(id);
 
         if (!entity.isPresent()) {
             return ResponseEntity.notFound().build();
         }
         card.setNum_card_id(id);
-        rep.save(card);
+        repository.save(card);
 
         return ResponseEntity.noContent().build();
     }
-    @DeleteMapping(path = {"/Card/{id}", "/Card/{id}/"})
+    @DeleteMapping(path = "/card/{id}")
     public void delete(@PathVariable Long id) {
-        rep.deleteById(id);
+        repository.deleteById(id);
     }
     }
 
